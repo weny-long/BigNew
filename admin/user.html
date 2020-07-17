@@ -68,6 +68,61 @@
             </form>
         </div>
     </div>
+    <!-- 导入网络中间层 -->
+    <script src="./libs/http.js"></script>
+    <script>
+        /* ajaxf发送请求渲染页面 */
+        /* 
+        获取用户详情
+
+        请求地址：/admin /user/detail
+
+        请求方式：get
+
+        请求参数：无
+
+        */
+        $(function () {
+            $.ajax({
+                url: BigNew.user_detail,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.user_pic').attr('src', backData.data.userPic)
+                    $('.username').val(backData.data.username)
+                    $('.nickname').val(backData.data.nickname)
+                    $('.email').val(backData.data.email)
+                    $('.password').val(backData.data.password)
+                }
+            })
+            //文件预览
+            $('#exampleInputFile').change(function () {
+                var files = this.files[0];
+                var url = URL.createObjectURL(files);
+                $(this).prev().attr('src', url);
+            })
+            //文件上传
+            $('.btn-edit').click(function (e) {
+                e.preventDefault();
+                var fd = new FormData($('form')[0])
+                $.ajax({
+                    url: BigNew.user_edit,
+                    type: 'post',
+                    data: fd,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (backData) {
+                        if (backData.code == 200) {
+                            alert('修改成功！')
+                            window.parent.location.reload();
+                        }
+                    }
+                })
+            })
+        })
+
+    </script>
 </body>
 
 </html>
