@@ -72,6 +72,84 @@
             </div>
         </div>
     </div>
+    <!-- 网络中间层 -->
+    <script src="./libs/http.js"></script>
+    <!-- 文章类别下拉菜单 -->
+    <script id="category_list" type="text/html">
+            <option value="">所有分类</option>
+            {{each data v}}
+             <option value="{{v.id}}">{{v.name}}</option>
+            {{/each}}
+    </script>
+    <!-- 文章列表 -->
+    <script id="article_query" type="text/html">
+       {{each data.data v}}
+       <tr>
+        <td>{{v.title}}</td>
+        <td>{{v.author}}</td>
+        <td>{{v.category}}</td>
+        <td class="text-center">{{v.date}}</td>
+        <td class="text-center">{{v.state}}</td>
+        <td class="text-center">
+            <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+            <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+        </td>
+    </tr>
+       {{/each}}
+    </script>
+    <script>
+
+
+        /* 
+        请求地址：/admin/category/list
+
+        请求方式：get
+
+        请求参数：无
+
+        返回数据：文章
+
+        */
+
+
+        $(function () {
+            //获取文章列表渲染页面  上方下拉菜单
+            $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('#selCategory').html(template('category_list', backData))
+                }
+            })
+            //查询文章列表
+
+            //筛选
+            $('#btnSearch').click(function (e) {
+                e.preventDefault();//阻止表单默认跳转事件
+                $.ajax({
+                    url: BigNew.article_query,
+                    type: 'get',
+                    data: {
+                        type: $('#selCategory').val(),
+                        state: $('#selStatus').val(),
+                        page: 1,
+                        perpage: ''
+                    },
+                    dataType: 'json',
+                    success: function (backData) {
+                        if (backData.code == 200) {
+                            $('.table>tbody').html(template('article_query', backData))
+                        }
+                    }
+                })
+            })
+            //页面加载，触发第一个下拉菜单事件
+            $('#btnSearch').click();
+        })
+
+
+    </script>
 </body>
 
 </html>

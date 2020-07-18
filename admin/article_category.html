@@ -51,6 +51,35 @@
             </table>
         </div>
     </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">分类管理</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">名称:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">类别:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary btn-confirm">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- 导入网络中间层 -->
     <script src="./libs/http.js"></script>
     <script id="category_list" type="text./html">
@@ -59,21 +88,111 @@
     <td>{{v.name}}</td>
     <td>{{v.slug}}</td>
     <td class="text-center">
-        <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-        <a href="javascript:void(0);" class="btn btn-danger btn-xs">删除</a>
+        <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs btn-editor" data-toggle="modal" data-target="#myModal" data-id={{v.id}}>编辑</a>
+        <a href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete" data-id={{v.id}}>删除</a>
     </td>
 </tr>
 {{/each}}
 </script>
     <script>
-        $.ajax({
-            url: BigNew.category_list,
-            type: 'get',
-            dataType: 'json',
-            success: function (backData) {
-                $('.table>tbody').html(template('category_list', backData))
-            }
+        //请求数据渲染页面
+        $(function () {
+            $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.table>tbody').html(template('category_list', backData))
+                }
+            })
+            //模态框弹出事件
+            $('#myModal').on('shown.bs.modal', function (e) {
+                if ($(e.relatedTarget).text() == '新增分类') {//弹出模态框为新增分类
+                    $('.modal-body>form')[0].reset();//弹出后清空原来的表单内容
+                    $('.btn-confirm').text('新增');
+                } else {//弹出模态框为编辑
+                    $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text());
+                    $('#message-text').val($(e.relatedTarget).parent().prev().text());
+                    $('.btn-confirm').text('编辑');
+                    $('.btn-confirm').attr('data-id', $(e.relatedTarget).attr('data-id'))
+                }
+            })
+            //模态框下方取消按钮
+            $('.btn-cancel').on('click', function () {
+                $('.modal-body>form')[0].reset();//弹出后清空原来的表单内容
+            })
+            //模态框下方确认按钮
+            $('.btn-confirm').on('click', function () {
+                if ($(this).text() == '新增') {
+                    /* 
+                    新增文章类别
+                    请求地址：/admin/category/add
+                    请求方式：post
+                    请求参数
+                     */
+                    $.ajax({
+                        url: BigNew.category_add,
+                        type: 'post',
+                        data: {
+                            name: $('#recipient-name').val(),
+                            slug: $('#message-text').val()
+                        },
+                        dataType: 'json',
+                        success: function (backData) {
+                            if (backData.code == 201) {
+                                alert(backData.msg);
+                                window.location.reload();
+                            }
+                        }
+                    })
+                } else {//编辑确认按钮
+                    /* 
+                    编辑文章类别
+                    请求地址：/admin/category/edit
+                    请求方式：post
+                    请求参数：
+                    */
+                    $.ajax({
+                        url: BigNew.category_edit,
+                        type: 'post',
+                        data: {
+                            id: $(this).attr('data-id'),
+                            name: $('#recipient-name').val(),
+                            slug: $('#message-text').val()
+                        },
+                        dataType: 'json',
+                        success: function (backData) {
+                            if (backData.code == 200) {
+                                alert(backData.msg)
+                                window.location.reload()
+                            } else {
+                                alert(backData.msg)
+                            }
+                        }
+                    })
+                }
+            })
+            //删除按钮
+            $('.table>tbody').on('click', '.btn-delete', function () {
+                $.ajax({
+                    url: BigNew.category_delete,
+                    type: 'post',
+                    data: {id:$(this).attr('data-id')},
+                    dataType: 'json',
+                    success: function (backData) { 
+                        if(backData.code==204){
+                            alert(backData.msg);
+                            window.location.reload();
+                        }else{
+                            alert(backData.msg);
+                        }
+                    }
+                })
+            })
         })
+
+
+
     </script>
 
 </html>
