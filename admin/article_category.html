@@ -43,15 +43,14 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
+                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei"
+                                data-target="#myModal" data-toggle="modal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-
     <!-- 模态框 -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog" role="document">
@@ -69,33 +68,40 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">类别:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <input class="form-control" id="message-text">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary btn-confirm">确认</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- 导入网络中间层 -->
+    <!-- 网络中间层 -->
     <script src="./libs/http.js"></script>
-    <script id="category_list" type="text./html">
-{{each data v}}
-<tr>
-    <td>{{v.name}}</td>
-    <td>{{v.slug}}</td>
-    <td class="text-center">
-        <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs btn-editor" data-toggle="modal" data-target="#myModal" data-id={{v.id}}>编辑</a>
-        <a href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete" data-id={{v.id}}>删除</a>
-    </td>
-</tr>
-{{/each}}
-</script>
+    <script id="category_list" type="text/html">
+    {{each data v}}
+    <tr>
+        <td>{{v.name}}</td>
+        <td>{{v.slug}}</td>
+        <td class="text-center">
+            <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs" data-target="#myModal" data-toggle="modal" data-id='{{v.id}}'>编辑</a>
+            <a href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete" data-id={{v.id}}>删除</a>
+        </td>
+    </tr>
+    {{/each}}
+    </script>
     <script>
-        //请求数据渲染页面
+        /*
+        所有文章类别
+        请求地址：/admin/category/list
+        请求方式：get
+        请求参数：无
+        返回数据：文章
+        */
+        //文章一加载查询所有信息
         $(function () {
             $.ajax({
                 url: BigNew.category_list,
@@ -104,95 +110,78 @@
                 success: function (backData) {
                     $('.table>tbody').html(template('category_list', backData))
                 }
-            })
-            //模态框弹出事件
+            });
+            //点击新增
             $('#myModal').on('shown.bs.modal', function (e) {
-                if ($(e.relatedTarget).text() == '新增分类') {//弹出模态框为新增分类
-                    $('.modal-body>form')[0].reset();//弹出后清空原来的表单内容
-                    $('.btn-confirm').text('新增');
-                } else {//弹出模态框为编辑
-                    $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text());
-                    $('#message-text').val($(e.relatedTarget).parent().prev().text());
-                    $('.btn-confirm').text('编辑');
-                    $('.btn-confirm').attr('data-id', $(e.relatedTarget).attr('data-id'))
+                if ($(e.relatedTarget).text() == '新增分类') {
+                    $('.btn-confirm').text('新增');//修改弹出框的确认按钮
+                    $('.modal-body>form')[0].reset();//清空form表单
+                } else {
+                    $('.btn-confirm').text('编辑');//修改弹出框的确认按钮
+                    $('.btn-confirm').attr('data-id', $(e.relatedTarget).attr('data-id'))//把点击编辑按钮的data-id属性传给确认按钮
+                    $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text());//显示这个选项的名称
+                    $('#message-text').val($(e.relatedTarget).parent().prev().text());//显示这个选项的类别
                 }
             })
-            //模态框下方取消按钮
-            $('.btn-cancel').on('click', function () {
-                $('.modal-body>form')[0].reset();//弹出后清空原来的表单内容
-            })
-            //模态框下方确认按钮
-            $('.btn-confirm').on('click', function () {
-                if ($(this).text() == '新增') {
-                    /* 
-                    新增文章类别
-                    请求地址：/admin/category/add
-                    请求方式：post
-                    请求参数
-                     */
+            //点击确认
+            $('.btn-confirm').click(function () {
+                if ($(this).text() == '新增') {//新增的确认按钮
                     $.ajax({
                         url: BigNew.category_add,
                         type: 'post',
+                        dataType: 'json',
                         data: {
                             name: $('#recipient-name').val(),
                             slug: $('#message-text').val()
                         },
-                        dataType: 'json',
                         success: function (backData) {
                             if (backData.code == 201) {
                                 alert(backData.msg);
                                 window.location.reload();
                             }
                         }
-                    })
-                } else {//编辑确认按钮
-                    /* 
-                    编辑文章类别
-                    请求地址：/admin/category/edit
-                    请求方式：post
-                    请求参数：
-                    */
+                    });
+                } else {//编辑的确认按钮
                     $.ajax({
                         url: BigNew.category_edit,
                         type: 'post',
+                        dataType: 'json',
                         data: {
                             id: $(this).attr('data-id'),
                             name: $('#recipient-name').val(),
                             slug: $('#message-text').val()
                         },
-                        dataType: 'json',
                         success: function (backData) {
                             if (backData.code == 200) {
-                                alert(backData.msg)
-                                window.location.reload()
-                            } else {
-                                alert(backData.msg)
+                                alert(backData.msg);
+                                window.location.reload();
                             }
                         }
-                    })
+                    });
                 }
             })
-            //删除按钮
+            //点击删除按钮
             $('.table>tbody').on('click', '.btn-delete', function () {
                 $.ajax({
                     url: BigNew.category_delete,
                     type: 'post',
-                    data: {id:$(this).attr('data-id')},
                     dataType: 'json',
-                    success: function (backData) { 
-                        if(backData.code==204){
+                    data: { id: $(this).attr('data-id') },
+                    success: function (backData) {
+                        if (backData.code == 204) {
                             alert(backData.msg);
                             window.location.reload();
-                        }else{
-                            alert(backData.msg);
                         }
                     }
-                })
+                });
             })
         })
 
 
 
     </script>
+
+
+
 
 </html>

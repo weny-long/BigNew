@@ -14,6 +14,7 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 模板引擎 -->
     <script src="./libs/template-web.js"></script>
+<<<<<<< HEAD
     <!-- 日期插件 -->
     <link rel="stylesheet" href="./libs/jedate/css/jeDate-test.css">
     <link rel="stylesheet" href="./libs/jedate/css/jedate.css">
@@ -21,6 +22,14 @@
     <!-- 文本插件 -->
     <script src="./libs/wangEditor.min.js"></script>
     <script src="./libs/http.js"></script>
+=======
+    <!-- 文本框 -->
+    <script src="./libs/wangEditor.min.js"></script>
+    <!-- 日期插件 -->
+    <link rel="stylesheet" href="./libs/jedate-6.5.0/test/jeDate-test.css">
+    <link rel="stylesheet" href="./libs/jedate-6.5.0/skin/jedate.css">
+    <script src="./libs/jedate-6.5.0/src/jedate.js"></script>
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
 </head>
 
 <body>
@@ -60,9 +69,17 @@
                     <div class="col-sm-4">
                         <div class="jeinpbox">
                             <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD">
+<<<<<<< HEAD
                             <div class="icons jebtns" onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',zIndex:10001, isTime: false,
                             isinitVal:true,
                             festival:true,})">
+=======
+                            <div class="icons jebtns" onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',isTime: false,
+                            isinitVal: true,
+                            festival: true,
+                            zIndex: 10001,
+                            })">
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
                             </div>
                         </div>
                     </div>
@@ -71,7 +88,10 @@
                     <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
                     <div class="col-sm-10">
                         <div id="editor">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
                         </div>
                     </div>
                 </div>
@@ -84,6 +104,7 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
     <script id="category_list" type="text/html">
      {{each data v}}
      <option value={{v.id}}>{{v.name}}</option>
@@ -94,6 +115,16 @@
             //获取当前ID
             var id = window.location.href.split('=')[1];
             //console.log(id);
+=======
+    <script src="./libs/http.js"></script>
+    <script id="category_list" type="text/html">
+       {{each data v}}
+       <option value="{{v.id}}">{{v.name}}</option>
+       {{/each}}
+    </script>
+    <script>
+        $(function () {
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
             //日期插件初始化
             jeDate("#testico", {
                 format: "YYYY-MM-DD",
@@ -107,28 +138,56 @@
             var editor = new E('#editor')
             // 或者 var editor = new E( document.getElementById('editor') )
             editor.create()
+<<<<<<< HEAD
             //发送ajax 渲染category下拉菜单
+=======
+
+
+
+            //获取当前点击的id
+            var id = window.location.href.split('=')[1];
+            //渲染分类下拉菜单
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
             $.ajax({
                 url: BigNew.category_list,
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
+<<<<<<< HEAD
                     $('.category').html(template('category_list', backData))
                 }
             });
             //根据当前id获取当前数据
+=======
+                    if (backData.code == 200) {
+                        $('.category').html(template('category_list', backData))
+                    }
+                }
+            });
+            //渲染当前页面所有内容
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
             $.ajax({
                 url: BigNew.article_search,
                 type: 'get',
                 dataType: 'json',
                 data: { id: id },
                 success: function (backData) {
+<<<<<<< HEAD
                       console.log(backData);
                     $('#inputTitle').val(backData.data.title);//标题
                     $('.article_cover').attr('src', backData.data.cover)//头像
                     $('.category').val(backData.data.categoryId)//下拉菜单
                     $('.jeinput').val(backData.data.date)//日期
                     editor.txt.html(backData.data.content)//内容
+=======
+                   if(backData.code==200){
+                       $('#inputTitle').val(backData.data.title)//标题
+                       $('.article_cover').attr('src',backData.data.cover);//封面
+                       $('#testico').val(backData.data.date)//日期
+                       $('.category').val(backData.data.categoryId)//下拉菜单id
+                       editor.txt.html(backData.data.content)//设置内容
+                   }
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
                 }
             });
             //文件预览
@@ -142,6 +201,7 @@
                 $('.article_cover').attr('src', url);
             });
             //文件上传
+<<<<<<< HEAD
             $('.btn-edit,.btn-draft').on('click', function (e) {
                 //禁用表单默认提交事件
                 e.preventDefault();
@@ -163,6 +223,30 @@
                         if (backData.code == 200) {
                             alert('修改成功！');
                             window.location.reload();
+=======
+            $('.btn-edit,.btn-draft').on('click',function(e){
+                var state = $(this).hasClass('btn-edit')?'已发布':'草稿'
+                //禁用表单默认提交事件
+                e.preventDefault();
+                //创建FormData对象：参数是表单dom对象
+                var fd = new FormData($('form')[0]);
+                fd.append('id',id);
+                fd.append('date',$('#testico').val());
+                fd.append('content',editor.txt.text());
+                fd.append('state',state);
+
+                $.ajax({
+                    url:BigNew.article_edit,
+                    type:'post',
+                    dataType:'json',
+                    data:fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(backData){
+                        if(backData.code==200){
+                            alert(backData.msg);
+                            window.location.href='./article_list.html'
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
                         }
                     }
                 });
