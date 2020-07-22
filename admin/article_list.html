@@ -169,6 +169,7 @@
             $('#btnSearch').click();
             //点击分页 请求ajax加载数据
             function getArticleList(currentPage) {
+               /*  $('#pagination').twbsPagination('destroy'); */
                 $.ajax({
                     url: BigNew.article_query,
                     type: 'get',
@@ -184,6 +185,27 @@
                     }
                 });
             }
+            //点击左上方发表文章按钮
+            $('#release_btn').click(function () {
+                $('.level02>li:eq(1)', window.parent.document).click();
+            })
+            //删除
+            $('.table>tbody').on('click', '.btn-delete', function () {
+                $.ajax({
+                    url: BigNew.article_delete,
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        id: $(this).attr('data-id')
+                    },
+                    success: function (backData) {
+                        if (backData.code == 204) {
+                            alert(backData.msg);
+                            window.location.reload();
+                        }
+                    }
+                });
+            })
         })
 
 
