@@ -59,6 +59,8 @@
             <iframe src="./main_count.html" frameborder="0" width="100%" height="100%" name="main_frame"></iframe>
         </div>
     </div>
+    <!-- 网络中间层 -->
+    <script src="./libs/http.js"></script>
     <script>
         //请求用户信息
         /* 
@@ -79,43 +81,38 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
-                    if (backData.code == 200) {
-                        $('.user_center_link>img').attr('src', backData.data.userPic)
-                        $('.user_info>span').text(backData.data.nickname)
-                        $('.user_info>img').attr('src', backData.data.userPic)
-                    }
+                    $('.user_info>img').attr('src',backData.data.userPic);//头像
+                    $('.user_info>span').text('欢迎  '+backData.data.nickname);//昵称
+                    $('.user_center_link>img').attr('src',backData.data.userPic)//右上角头像
+                }
+            });
+            //点击左侧导航栏
+            $('.level01').click(function(){
+                $(this).addClass('active').siblings().removeClass('active');
+               
+                if($(this).index()==1){
+                    $('.level02').slideToggle();
+                    $('.menu .level01 b').toggleClass('rotate0');
+                    $('.level02>li:eq(0) a')[0].click(); //点击第二个导航栏时显示下拉
+                }else{
+                    $('.level02>li').removeClass('active')
                 }
             })
-            //点击退出登录
-            $('.logout').click(function () {
-                localStorage.removeItem('token');
-                window.location.href = './login.html'
+            
+            //二级菜单显示高亮
+            $('.level02>li').click(function(){
+                $(this).addClass('active').siblings().removeClass('active');
             })
-        })
-        //左边tab栏切换
-        $('.level01').click(function () {
-            //一级栏
-            $(this).addClass('active').siblings().removeClass('active');
-            //点击第二个栏  显示二级栏
-            if ($(this).index() == 1) {
-                //箭头向下旋转
-                $('.level01 b').toggleClass('rotate0')
-                $('.level02').slideToggle();
-                //默认触发第一个点击事件
-                $('.level02>li:eq(0) a')[0].click();
-            } else {
-                $('.level02>li').removeClass('active')
-            }
-
-        })
-        //二级栏tab栏切换高亮
-        $('.level02>li').click(function () {
-            $(this).addClass('active').siblings().removeClass('active');
-        })
-
-        //点击顶部个人中心时  左边需要显示高亮
-        $('.user_center_link a').click(function () {
-            $('#user').addClass('active').siblings().removeClass('active')
+            //退出按钮
+            $('.logout').click(function(){
+                localStorage.removeItem('token');
+                window.location.href='./login.html'
+            })
+            //点击上方个人中心 左边个人中心对于高亮
+            $('.user_center_link a').click(function(){
+                 $('#user').addClass('active').siblings().removeClass('active');
+                 
+            })
         })
 
     </script>
