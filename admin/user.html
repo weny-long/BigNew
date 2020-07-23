@@ -69,14 +69,33 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD
     <script>
         $(function () {
             //页面一加载发送AJAX请求用户详细信息渲染页面
+=======
+    <!-- 导入网络中间层 -->
+    <script src="./libs/http.js"></script>
+    <script>
+        /* ajaxf发送请求渲染页面 */
+        /* 
+        获取用户详情
+
+        请求地址：/admin /user/detail
+
+        请求方式：get
+
+        请求参数：无
+
+        */
+        $(function () {
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $.ajax({
                 url: BigNew.user_detail,
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
+<<<<<<< HEAD
                     if (backData.code == 200) {
                         $('#inputEmail1').val(backData.data.username);//用户邮箱
                         $('#inputEmail2').val(backData.data.nickname)//用户昵称
@@ -101,10 +120,29 @@
                 //禁用表单默认提交事件
                 e.preventDefault();
                 //创建FormData对象：参数是表单dom对象
+=======
+                    $('.user_pic').attr('src', backData.data.userPic)
+                    $('.username').val(backData.data.username)
+                    $('.nickname').val(backData.data.nickname)
+                    $('.email').val(backData.data.email)
+                    $('.password').val(backData.data.password)
+                }
+            })
+            //文件预览
+            $('#exampleInputFile').change(function () {
+                var files = this.files[0];
+                var url = URL.createObjectURL(files);
+                $(this).prev().attr('src', url);
+            })
+            //文件上传
+            $('.btn-edit').click(function (e) {
+                e.preventDefault();
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 var fd = new FormData($('form')[0])
                 $.ajax({
                     url: BigNew.user_edit,
                     type: 'post',
+<<<<<<< HEAD
                     dataType: 'json',
                     data: fd,
                     contentType: false,
@@ -118,6 +156,22 @@
                 });
             });
         })
+=======
+                    data: fd,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (backData) {
+                        if (backData.code == 200) {
+                            alert('修改成功！')
+                            window.parent.location.reload();
+                        }
+                    }
+                })
+            })
+        })
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     </script>
 </body>
 

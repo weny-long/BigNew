@@ -44,8 +44,8 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
+                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei"
+                                data-target="#myModal" data-toggle="modal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -59,7 +59,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
+<<<<<<< HEAD
                     <h4 class="modal-title" id="exampleModalLabel">文章类别</h4>
+=======
+                    <h4 class="modal-title" id="exampleModalLabel">分类管理</h4>
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 </div>
                 <div class="modal-body">
                     <form>
@@ -69,7 +73,11 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">类别:</label>
+<<<<<<< HEAD
                             <textarea class="form-control" id="message-text"></textarea>
+=======
+                            <input class="form-control" id="message-text">
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                         </div>
                     </form>
                 </div>
@@ -80,6 +88,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <!-- 模板 -->
     <script id="category_list" type="text/html">
      {{each data v}}
@@ -89,13 +98,37 @@
         <td class="text-center">
             <a data-id={{v.id}} href="javascript:void(0);" data-toggle="modal"data-target="#myModal" class=" btn btn-info btn-xs btn-edit">编辑</a>
             <a data-id={{v.id}} href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete">删除</a>
+=======
+    <!-- 网络中间层 -->
+    <script src="./libs/http.js"></script>
+    <script id="category_list" type="text/html">
+    {{each data v}}
+    <tr>
+        <td>{{v.name}}</td>
+        <td>{{v.slug}}</td>
+        <td class="text-center">
+            <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs" data-target="#myModal" data-toggle="modal" data-id='{{v.id}}'>编辑</a>
+            <a href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete" data-id={{v.id}}>删除</a>
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         </td>
     </tr>
     {{/each}}
     </script>
     <script>
+<<<<<<< HEAD
         $(function () {
             //ajax请求数据渲染页面
+=======
+        /*
+        所有文章类别
+        请求地址：/admin/category/list
+        请求方式：get
+        请求参数：无
+        返回数据：文章
+        */
+        //文章一加载查询所有信息
+        $(function () {
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $.ajax({
                 url: BigNew.category_list,
                 type: 'get',
@@ -104,6 +137,7 @@
                     $('.table>tbody').html(template('category_list', backData))
                 }
             });
+<<<<<<< HEAD
             //点击编辑和新增按钮事件  弹出模态框
             $('#myModal').on('shown.bs.modal', function (e) {
                 if ($(e.relatedTarget).text() == '新增分类') {
@@ -120,6 +154,23 @@
             //模态框确认事件
             $('.btn-confirm').click(function () {
                 if ($(this).text() == '新增') {
+=======
+            //点击新增
+            $('#myModal').on('shown.bs.modal', function (e) {
+                if ($(e.relatedTarget).text() == '新增分类') {
+                    $('.btn-confirm').text('新增');//修改弹出框的确认按钮
+                    $('.modal-body>form')[0].reset();//清空form表单
+                } else {
+                    $('.btn-confirm').text('编辑');//修改弹出框的确认按钮
+                    $('.btn-confirm').attr('data-id', $(e.relatedTarget).attr('data-id'))//把点击编辑按钮的data-id属性传给确认按钮
+                    $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text());//显示这个选项的名称
+                    $('#message-text').val($(e.relatedTarget).parent().prev().text());//显示这个选项的类别
+                }
+            })
+            //点击确认
+            $('.btn-confirm').click(function () {
+                if ($(this).text() == '新增') {//新增的确认按钮
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                     $.ajax({
                         url: BigNew.category_add,
                         type: 'post',
@@ -129,43 +180,87 @@
                             slug: $('#message-text').val()
                         },
                         success: function (backData) {
+<<<<<<< HEAD
                             alert(backData.msg);
                             window.location.reload();
                         }
                     });
                 } else {
+=======
+                            if (backData.code == 201) {
+                                alert(backData.msg);
+                                window.location.reload();
+                            }
+                        }
+                    });
+                } else {//编辑的确认按钮
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                     $.ajax({
                         url: BigNew.category_edit,
                         type: 'post',
                         dataType: 'json',
                         data: {
+<<<<<<< HEAD
                             id: $('.btn-confirm').attr('data-id'),
+=======
+                            id: $(this).attr('data-id'),
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                             name: $('#recipient-name').val(),
                             slug: $('#message-text').val()
                         },
                         success: function (backData) {
+<<<<<<< HEAD
                             alert(backData.msg);
                             window.location.reload();
+=======
+                            if (backData.code == 200) {
+                                alert(backData.msg);
+                                window.location.reload();
+                            }
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                         }
                     });
                 }
             })
+<<<<<<< HEAD
             //btn-delete删除分类
+=======
+            //点击删除按钮
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $('.table>tbody').on('click', '.btn-delete', function () {
                 $.ajax({
                     url: BigNew.category_delete,
                     type: 'post',
                     dataType: 'json',
+<<<<<<< HEAD
                     data: {
                         id: $(this).attr('data-id')
                     },
                     success: function (backData) {
                         alert(backData.msg)
                         window.location.reload();
+=======
+                    data: { id: $(this).attr('data-id') },
+                    success: function (backData) {
+                        if (backData.code == 204) {
+                            alert(backData.msg);
+                            window.location.reload();
+                        }
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                     }
                 });
             })
         })
+<<<<<<< HEAD
     </script>
+=======
+
+
+
+    </script>
+
+
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
 
 </html>

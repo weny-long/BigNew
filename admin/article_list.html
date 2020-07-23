@@ -13,13 +13,19 @@
     <link rel="stylesheet" href="./libs/jedate/css/jeDate-test.css">
     <link rel="stylesheet" href="./libs/jedate/css/jedate.css">
     <script src="./libs/jquery-1.12.4.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+<<<<<<< HEAD
     <script src="./libs/http.js"></script>
     <!-- 分页插件 -->
     <script src="./libs/jquery.twbsPagination.js"></script>
     <!-- 日期插件 -->
     <script src="./libs/jedate/js/jedate.js"></script>
+=======
+    <!-- 分页插件 -->
+    <script src="./libs/jquery.twbsPagination.js"></script>
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
 </head>
 
 <body>
@@ -76,10 +82,18 @@
                 </tbody>
             </table>
             <div class="row text-center">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                <!-- 分页插件html结构 -->
+=======
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 <ul id="pagination" class="pagination-sm"></ul>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <!-- 下拉菜单 -->
     <script id="category_list" type="text/html">
         <option value= "">所有分类</option>
@@ -106,11 +120,59 @@
     <script>
         $(function () {
             //文章类别下拉菜单
+=======
+    <!-- 网络中间层 -->
+    <script src="./libs/http.js"></script>
+<<<<<<< HEAD
+    <!-- 文章类别下拉菜单 -->
+    <script id="category_list" type="text/html">
+            <option value=''>所有分类</option>
+            {{each data v}}
+             <option value="{{v.id}}">{{v.name}}</option>
+            {{/each}}
+    </script>
+    <!-- 文章列表 -->
+=======
+    <!-- 页面表格模板 -->
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+    <script id="article_query" type="text/html">
+    {{each data.data v}}
+    <tr>
+        <td>{{v.title}}</td>
+        <td>{{v.author}}</td>
+        <td>{{v.category}}</td>
+        <td class="text-center">{{v.date}}</td>
+        <td class="text-center">{{v.state}}</td>
+        <td class="text-center">
+<<<<<<< HEAD
+            <a href="article_edit.html?id={{v.id}}" class="btn btn-default btn-xs">编辑</a>
+            <a data-id={{v.id}} href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete">删除</a>
+        </td>
+=======
+            <a  href="article_edit.html?id={{v.id}}" class="btn btn-default btn-xs">编辑</a>
+            <a  data-id={{v.id}} href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete">删除</a>
+        </td>  
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+    </tr>
+    {{/each}}   
+    </script>
+    <!-- 上方文章类别模板 -->
+    <script id="category_list" type="text/html">
+        <option value=''>所有分类</option>
+        {{each data v}}
+        <option value={{v.id}}>{{v.name}}</option>
+        {{/each}}
+    </script>
+    <script>
+        //获取上方文章类别
+        $(function () {
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $.ajax({
                 url: BigNew.category_list,
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
+<<<<<<< HEAD
                     $('#selCategory').html(template('category_list', backData))
                 }
             });
@@ -131,6 +193,20 @@
             // });
             //点击筛选
             $('.btn-sx').click(function (e) {
+=======
+<<<<<<< HEAD
+                    // console.log(backData);
+                    $('#selCategory').html(template('category_list', backData))
+=======
+                    if (backData.code == 200) {
+                        $('#selCategory').html(template('category_list', backData))
+                    }
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+                }
+            });
+            //点击筛选按钮
+            $('#btnSearch').click(function (e) {
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 e.preventDefault();
                 $.ajax({
                     url: BigNew.article_query,
@@ -143,6 +219,7 @@
                         perpage: 10
                     },
                     success: function (backData) {
+<<<<<<< HEAD
                         // console.log(backData);
                         $('.table>tbody').html(template('article_query', backData))
                         $('#pagination').twbsPagination('destroy');
@@ -170,6 +247,36 @@
             })
             //页码点击函数封装
             function getLoad(page) {
+=======
+                        console.log(backData);
+                        $('.table>tbody').html(template('article_query', backData));
+                        //(1)先销毁旧插件
+                        $('#pagination').twbsPagination('destroy');
+                        //分页插件初始化
+                        $('#pagination').twbsPagination({
+                            totalPages: backData.data.totalPage,//总页数
+                            startPage: 1,//起始页
+                            visiblePages: 7,//可见页数
+                            first: '首页',
+                            last: '尾页',
+                            prev: '上一页',
+                            next: '下一页',
+                            onPageClick: function (event, page) {//页码点击事件
+                                $('#page-content').text('Page ' + page);
+                                getArticleList(page);
+                            }
+                        });
+                    }
+                });
+            })
+            $('#btnSearch').click();//默认触发第一个点击事件
+
+            /**
+            * @description:
+            * @param {type} 
+            * @return: 
+            */
+            function getArticleList(currentPage) {
                 $.ajax({
                     url: BigNew.article_query,
                     type: 'get',
@@ -177,6 +284,66 @@
                     data: {
                         type: $('#selCategory').val(),
                         state: $('#selStatus').val(),
+                        page: currentPage,
+                        perpage: 10
+                    },
+                    success: function (backData) {
+                        $('.table>tbody').html(template('article_query', backData));
+                    }
+                });
+            }
+            //删除按钮点击事件
+            $('.table>tbody').on('click', '.btn-delete', function () {
+                var id = $(this).attr('data-id')
+                $.ajax({
+                    url: BigNew.article_delete,
+                    type: 'post',
+                    dataType: 'json',
+                    data: { id: id },
+                    success: function (backData) {
+<<<<<<< HEAD
+                        //点击后渲染页面
+                        $('.table>tbody').html(template('article_query', backData))
+                        //清楚旧的分页插件
+                        $('#pagination').twbsPagination('destroy');
+                        //加载分页插件
+                        $('#pagination').twbsPagination({
+                            totalPages: backData.data.totalPage,//总页数
+                            visiblePages: 10,//可见页数
+                            startPage: 1,
+                            first: '首页',
+                            last: '尾页',
+                            prev: '上一页',
+                            next: '下一页',
+                            onPageClick: function (event, page) {
+                                $('#page-content').text('Page ' + page);
+                                getArticleList(page);
+                            }
+                        });
+=======
+                        if (backData.code == 204) {
+                            alert(backData.msg);//提示删除成功
+                            window.location.reload();//刷新页面
+                        }
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+                    }
+                });
+            })
+<<<<<<< HEAD
+            //页面加载，触发第一个下拉菜单事件
+            $('#btnSearch').click();
+            //点击分页 请求ajax加载数据
+            function getArticleList(currentPage) {
+               /*  $('#pagination').twbsPagination('destroy'); */
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
+                $.ajax({
+                    url: BigNew.article_query,
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        type: $('#selCategory').val(),
+                        state: $('#selStatus').val(),
+<<<<<<< HEAD
                         page: page,
                         perpage: 10
                     },
@@ -187,6 +354,42 @@
                 }
                 )
             }
+=======
+                        page: currentPage,
+                        perpage: 10,
+                    },
+                    success: function (backData) {
+                        $('.table>tbody').html(template('article_query', backData))
+                    }
+                });
+            }
+<<<<<<< HEAD
+            //点击左上方发表文章按钮
+            $('#release_btn').click(function () {
+                $('.level02>li:eq(1)', window.parent.document).click();
+            })
+            //删除
+            $('.table>tbody').on('click', '.btn-delete', function () {
+                $.ajax({
+                    url: BigNew.article_delete,
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        id: $(this).attr('data-id')
+                    },
+                    success: function (backData) {
+                        if (backData.code == 204) {
+                            alert(backData.msg);
+                            window.location.reload();
+                        }
+                    }
+                });
+            })
+=======
+=======
+>>>>>>> 1ee3e7fef63332575cf4ed9da06dcd04730ed15a
+>>>>>>> c86f6c60a1665cf3757eafe74ec143ee188510ea
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         })
     </script>
 </body>

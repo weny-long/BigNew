@@ -57,6 +57,8 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+  <!-- 网络中间层 -->
+  <script src="./libs/http.js"></script>
   <script>
 
     /* 登录功能思路
@@ -71,6 +73,7 @@
     $(function () {
       //1.给登录按钮注册点击事件
       $('.input_sub').click(function (e) {
+<<<<<<< HEAD
         e.preventDefault();//2.阻止默认跳转事件（表单submit会自动跳转页面
         var username = $('.input_txt').val();//3.获取用户名和密码
         var password = $('.input_pass').val();
@@ -82,16 +85,35 @@
           })
         }
         /*5.ajax发送请求 */
+=======
+        e.preventDefault();//阻止表单默认跳转行为
+        var username = $('.input_txt').val();
+        var password = $('.input_pass').val();
+        /* 非空判断 */
+        if (username.length == 0 || password.length == 0) {
+          alert('用户名和密码不能为空！');
+          return;
+        }
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         $.ajax({
+          type: "post",
           url: BigNew.user_login,
+<<<<<<< HEAD
           type: 'post',
           dataType: 'json',
+=======
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
           data: {
             username: username,
             password: password
           },
+<<<<<<< HEAD
+=======
+          dataType: "json",
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
           success: function (backData) {
             if (backData.code == 200) {
+<<<<<<< HEAD
               localStorage.setItem('token', backData.token)
               $('.modal-body>p').text(backData.msg)
               $('#myModal').modal({
@@ -108,13 +130,20 @@
               $('#myModal').on('hidden.bs.modal', function (e) {
                 window.location.reload();
               })
+=======
+              alert(backData.msg)
+              window.location.href='./index.html'
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             }
           }
         });
       })
+
+<<<<<<< HEAD
+
+=======
     })
-
-
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
 
 
 

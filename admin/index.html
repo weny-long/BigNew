@@ -32,9 +32,18 @@
             <div class="level01"><a href="#"><i class="iconfont icon-icon-article"></i><span>文章管理</span><b
                         class="iconfont icon-arrowdownl"></b></a></div>
             <ul class="level02">
+<<<<<<< HEAD
                 <li><a href="./article_list.html" target="main_frame"><i class="iconfont icon-previewright"></i><span>文章列表</span></a></li>
                 <li><a href="./article_edit.html" target="main_frame"><i class="iconfont icon-previewright"></i><span>发表文章</span></a></li>
                 <li><a href="./article_category.html" target="main_frame"><i class="iconfont icon-previewright"></i><span>文章类别管理</span></a>
+=======
+                <li><a href="./article_list.html" target="main_frame"><i
+                            class="iconfont icon-previewright"></i><span>文章列表</span></a></li>
+                <li><a href="./article_release.html" target="main_frame"><i
+                            class="iconfont icon-previewright"></i><span>发表文章</span></a></li>
+                <li><a href="./article_category.html" target="main_frame"><i
+                            class="iconfont icon-previewright"></i><span>文章类别管理</span></a>
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 </li>
             </ul>
 
@@ -53,18 +62,41 @@
         </div>
         <!-- 右侧主体内容 -->
         <div class="main" id="main_body">
+<<<<<<< HEAD
             <iframe src="./main_count.html" frameborder="0" name="main_frame"
                 style="width: 100%; height: 100%;"></iframe>
+=======
+            <iframe src="./main_count.html" frameborder="0" width="100%" height="100%" name="main_frame"></iframe>
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         </div>
     </div>
+    <!-- 网络中间层 -->
+    <script src="./libs/http.js"></script>
     <script>
+<<<<<<< HEAD
         /* 登录页面渲染用户信息 */
+=======
+        //请求用户信息
+        /* 
+        请求地址：/admin/user/info
+
+        请求方式：get
+
+        请求参数：无
+
+        返回数据：
+
+        */
+
+        //请求数据 渲染左边和顶部栏
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         $(function () {
             $.ajax({
                 url: BigNew.user_info,
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
+<<<<<<< HEAD
                     $('.user_info>img').attr('src', backData.data.userPic);//头像
                     $('.user_info>span').text('欢迎  ' + backData.data.nickname)//名字
                     $('.user_center_link>img').attr('src', backData.data.userPic)//右上角图标
@@ -72,9 +104,36 @@
             });
             /* logout退出登录功能 */
             $('.logout').click(function () {
+=======
+                    $('.user_info>img').attr('src',backData.data.userPic);//头像
+                    $('.user_info>span').text('欢迎  '+backData.data.nickname);//昵称
+                    $('.user_center_link>img').attr('src',backData.data.userPic)//右上角头像
+                }
+            });
+            //点击左侧导航栏
+            $('.level01').click(function(){
+                $(this).addClass('active').siblings().removeClass('active');
+               
+                if($(this).index()==1){
+                    $('.level02').slideToggle();
+                    $('.menu .level01 b').toggleClass('rotate0');
+                    $('.level02>li:eq(0) a')[0].click(); //点击第二个导航栏时显示下拉
+                }else{
+                    $('.level02>li').removeClass('active')
+                }
+            })
+            
+            //二级菜单显示高亮
+            $('.level02>li').click(function(){
+                $(this).addClass('active').siblings().removeClass('active');
+            })
+            //退出按钮
+            $('.logout').click(function(){
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 localStorage.removeItem('token');
                 window.location.href = './login.html'
             })
+<<<<<<< HEAD
             /* 右上方点击个人中心a标签  侧边栏个人中心对应高亮 */
             $('.user_center_link').click(function () {
                 $('#user').addClass('active').siblings().removeClass('active');
@@ -97,6 +156,15 @@
 
         })
 
+=======
+            //点击上方个人中心 左边个人中心对于高亮
+            $('.user_center_link a').click(function(){
+                 $('#user').addClass('active').siblings().removeClass('active');
+                 
+            })
+        })
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     </script>
 </body>
 

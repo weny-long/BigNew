@@ -13,7 +13,10 @@
   <script src="./libs/jquery-1.12.4.min.js"></script>
   <script src="./libs/template-web.js"></script>
   <script src="./libs/http.js"></script>
+<<<<<<< HEAD
   <!-- 分页插件 -->
+=======
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
   <script src="./libs/jquery.twbsPagination.js"></script>
 </head>
 
@@ -138,14 +141,18 @@
             <td>1970-04-24 11:22:29</td>
             <td>已批准</td>
             <td class="text-center">
-              <a href="javascript:editTr( 'rejected',11 );" class="btn btn-warning btn-xs">拒绝</a>
+              <a href="javascript:editTr( 'rejected',11 );" class="btn btn-warning btn-xs btn-reject">拒绝</a>
               <a href="javascript:editTr( 'trashed',11 );" class="btn btn-danger btn-xs">删除</a>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="row text-center">
+<<<<<<< HEAD
         <!--    <ul class="pagination pagination-sm">
+=======
+        <!--  <ul class="pagination pagination-sm">
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
           <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
           <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
           <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -164,6 +171,7 @@
     </div>
   </div>
   <script id="comment_list" type="text/html">
+<<<<<<< HEAD
     {{each data.data v}}
     <tr>
       <td>{{v.author}}</td>
@@ -184,11 +192,34 @@
     {{/each}}
   </script>
   <script>
+=======
+   {{each data.data v}}
+   <tr class="danger">
+    <td>{{v.author}}</td>
+    <td>{{v.content}}</td>
+    <td>{{v.title}}</td>
+    <td>{{v.date}} {{v.time}}</td>
+    <td>{{v.state}}</td>
+    <td class="text-center">
+      {{ if v.state == '已通过' }}
+      <a href="javascript:void(0);" data-id="{{ v.id }}" class="btn btn-warning btn-xs btn-reject">拒绝</a>
+      {{ else if v.state == '待审核' }}
+      <a href="javascript:void(0);" data-id="{{ v.id }}" class="btn btn-info btn-xs btn-pass">批准</a>
+      {{ /if }}
+      <a href="javascript:void(0);" data-id="{{ v.id }}" class="btn btn-danger btn-xs btn-delete">删除</a>
+    </td>
+  </tr>
+   {{/each}}
+  </script>
+  <script>
+    //ajax请求渲染评论列表
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     $(function () {
       $.ajax({
         url: BigNew.comment_list,
         type: 'get',
         dataType: 'json',
+<<<<<<< HEAD
         data: {
           page: 1,
           perpage: 10
@@ -208,16 +239,42 @@
             onPageClick: function (event, page) {
               $('#page-content').text('Page ' + page);
               getLoad(page)
+=======
+        data: { page: 1, perpage: 10 },
+        success: function (backData) {
+          console.log(backData);
+          $('.table>tbody').html(template('comment_list', backData));
+          //清除以前的分页插件
+          $('#pagination').twbsPagination('destroy');
+          //加载分页插件
+          $('#pagination').twbsPagination({
+            totalPages: backData.data.totalPage,
+            visiblePages: 10,
+            startPage: 1,
+            first: '首页',
+            last: '尾页',
+            prev: '上一页',
+            next: '下一页',
+            onPageClick: function (event, page) {
+              $('#page-content').text('Page ' + page);
+              getCommentList(page);
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             }
           });
         }
       });
+<<<<<<< HEAD
       //封装分页插件点击函数
       function getLoad(page) {
+=======
+      //封装点击分页请求ajax
+      function getCommentList(page) {
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         $.ajax({
           url: BigNew.comment_list,
           type: 'get',
           dataType: 'json',
+<<<<<<< HEAD
           data: {
             page: page,
             perpage: 10
@@ -236,26 +293,65 @@
             var url = BigNew.comment_reject;
             break;
           case $(this).hasClass('btn-sure'):
+=======
+          data: { page: page, perpage: 10 },
+          success: function (backData) {
+            $('.table>tbody').html(template('comment_list', backData));
+          }
+        });
+      }
+      /* 
+     3.评论审批
+     4.评论拒绝
+     5.评论删除
+
+     共同点：
+       a. 都是ajax动态添加，需要注册委托事件
+       b. ajax都是post请求，参数都是评论id
+     唯一不同点：
+       ajax路径不同
+     */
+      $('.table>tbody').on('click', '.btn-reject,.btn-delete,.btn-pass', function () {
+        switch (true) {
+          case $(this).hasClass('btn-reject'):
+            var url = BigNew.comment_reject;
+            break;
+          case $(this).hasClass('btn-pass'):
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             var url = BigNew.comment_pass;
             break;
           default:
             var url = BigNew.comment_delete;
             break;
+<<<<<<< HEAD
         }
+=======
+        };
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         $.ajax({
           url: url,
           type: 'post',
           dataType: 'json',
           data: { id: $(this).attr('data-id') },
           success: function (backData) {
+<<<<<<< HEAD
             if(backData.code==200){
               alert(backData.msg);
             window.location.reload();
+=======
+            if (backData.code == 200) {
+              alert(backData.msg);
+              window.location.reload();
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             }
           }
         });
       })
     })
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
   </script>
 </body>
 

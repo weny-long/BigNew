@@ -20,25 +20,25 @@
         <div class="row spannel_list">
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel">
-                    <em>10015</em><span>篇</span>
+                    <em class="art_sum">10015</em><span>篇</span>
                     <b>总文章数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor01">
-                    <em>123</em><span>篇</span>
+                    <em class="artday_new">123</em><span>篇</span>
                     <b>日新增文章数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor02">
-                    <em>35</em><span>条</span>
+                    <em class="com_sum">35</em><span>条</span>
                     <b>评论总数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor03">
-                    <em>123</em><span>条</span>
+                    <em class="comday_new">123</em><span>条</span>
                     <b>日新增评论数</b>
                 </div>
             </div>
@@ -63,7 +63,10 @@
 
     <!-- 折线图 -->
     <script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
         (function () {
             var myChart = echarts.init(document.getElementById('curve_show'));
             var xData = [];
@@ -74,7 +77,11 @@
             //(2).设置请求方法和地址
             //get请求的数据直接添加在url的后面 格式是 url?key=value
             xhr.open('get', 'http://localhost:8080/api/v1/admin/data/article');
+<<<<<<< HEAD
             xhr.setRequestHeader('Authorization', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYWRtaW4iLCJleHAiOjIxOTk5Mzg2NDMsImlhdCI6MTU5NTEzODY0M30.Z7pfR3BL7WpUA9BEuxmnF3m5aoVB1nJCdfDQ8pAy0J2ODqXX5AtGHjuSlaDAwxDCAOq0ADzx2s7gdJbhe9EX1SoxMli8Vj8xnnqpnKZlPWaotbGQ4oHO8d7hVEQU0tDin5XQWpL10SqxclQzSZn-5w_mICPlELlEAtzJN7Pfr6k')
+=======
+            xhr.setRequestHeader('Authorization', localStorage.getItem('token'))
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             //(3).发送请求
             xhr.send();
             //(4).注册回调函数
@@ -157,6 +164,10 @@
             }
         })()
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     </script>
 
     <!-- 环形图 -->
@@ -175,6 +186,7 @@
                 xhr.send();
                 //(4).注册回调函数
                 xhr.onload = function () {
+<<<<<<< HEAD
 
                     var backData = JSON.parse(xhr.responseText)
                     // console.log(backData);
@@ -189,6 +201,22 @@
                     loadingecharts()
                 };
 
+=======
+
+                    var backData = JSON.parse(xhr.responseText)
+                    // console.log(backData);
+                    for (var i = 0; i < backData.date.length; i++) {
+                        var obj = backData.date[i];
+                        nData.push(backData.date[i].name)
+                        sData.push({
+                            name: backData.date[i].name,
+                            value: backData.date[i].articles
+                        })
+                    }
+                    loadingecharts()
+                };
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 // 指定图表的配置项和数据
                 function loadingecharts() {
                     var option = {
@@ -224,10 +252,12 @@
                 }
             })()
     </script>
+
     <!-- 柱状图 -->
     <script>
             (function () {
                 var myChart = echarts.init(document.getElementById('column_show'));
+<<<<<<< HEAD
 
                 // 指定图表的配置项和数据
                 option = {
@@ -300,6 +330,96 @@
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(option);
             })()
+=======
+
+                // 指定图表的配置项和数据
+                option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    title: {
+                        text: '分类访问量',
+                        left: 'center',
+                    },
+                    legend: {
+                        data: ['爱生活', '趣美味', '爱旅行', '爱电影', '爱保健'],
+                        top: 30
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['一月 ', '二月', '三月', '四月']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '爱生活',
+                            type: 'bar',
+                            data: [320, 332, 301, 334,],
+                            color:'#5885e8'
+                        },
+                        {
+                            name: '趣美味',
+                            type: 'bar',
+                            data: [120, 132, 101, 134,],
+                            color:'#13cfd5'
+                        },
+                        {
+                            name: '爱旅行',
+                            type: 'bar',
+                            data: [220, 182, 191, 234,],
+                            color:'#00ce68'
+                        },
+                        {
+                            name: '爱电影',
+                            type: 'bar',
+                            color:'#ff9565',
+                            data: [150, 232, 201, 154,]
+                        },
+                        {
+                            name: '爱保健',
+                            type: 'bar',
+                            data: [562, 520, 510, 530,],
+                            color:'#20ff19',
+                        },
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            })()
+    </script>
+    <script>
+        $(function () {
+            //顶部信息统计
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/admin/data/info',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.art_sum').text(backData.totalArticle);
+                    $('artday_new').text(backData.dayArticle);
+                    $('.com_sum').text(backData.totalComment);
+                    $('.comday_new').text(backData.dayComment);
+                }
+            });
+            //
+        })
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     </script>
 </body>
 

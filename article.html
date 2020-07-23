@@ -55,10 +55,17 @@
 
     <div class="main_con clearfix">
         <div class="left_con setfr">
+<<<<<<< HEAD
             <div id="info">
                 <div class="breadcrumb">
                     当前位置： <a href="#">首页</a> &gt; <a href="#">科技</a> &gt; 文章详情
                 </div>
+=======
+            <div class="breadcrumb">
+                当前位置： <a href="#">首页</a> &gt; <a href="#">科技</a> &gt; 文章详情
+            </div>
+            <div class="info">
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 <h3 class="article_title">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
                 <div class="article_info">杰克 发布于 2019-05-08 07:08:46&nbsp;&nbsp;&nbsp;分类: 奇趣事&nbsp;&nbsp;&nbsp;阅读:
                     (98)&nbsp;&nbsp;&nbsp;评论: (0)</div>
@@ -210,6 +217,7 @@
     <!-- 引入模板引擎js文件 -->
     <script src="./js/template-web.js"></script>
     <script src="./js/jquery-1.12.4.min.js"></script>
+<<<<<<< HEAD
     <!-- 文章详细信息模板 -->
     <script id="info_list" type="text/html">
 
@@ -292,23 +300,68 @@
         $(function () {
             /* 文章详细内容 */
             var id = window.location.href.split('=')[1]
+=======
+    <!-- 2.加载文章详细信息 -->
+    <script id="info_list" type="text/html">
+        <h3 class="article_title">{{data.title}}</h3>
+                <div class="article_info">{{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.categiryId}}&nbsp;&nbsp;&nbsp;阅读:
+                    ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comment}})</div>
+                <div class="article_con">
+                   {{@ data.content}}
+                </div>
+                <div class="article_links">
+                    {{if data.prev}}
+                    上一篇： <a href="./article.html?id={{ data.prev.id }}">{{ data.prev.title }}</a><br>
+                    {{/if}}
+                    {{if data.next}}
+                    下一篇： <a href="./article.html?id={{ data.next.id }}">{{ data.next.title }}</a>
+                    {{/if}}
+                </div>
+    </script>
+    <!-- 加载评论列表 -->
+    <script id="get_comment" type="text/html">
+     {{each data v}} 
+     <div class="comment_detail_list">
+        <div class="person_pic fl">{{v.author[0]}}</div>
+        <div class="name_time fl"><b>{{v.author}}</b><span>{{v.date}}</span></div>
+        <div class="comment_text fl">
+            {{v.content}}
+        </div>
+    </div>
+     {{/each}}
+    </script>
+    <script>
+        $(function () {
+            /* 1.获取从其他页面挑战过来的参数文章id */
+            var id = window.location.href.split('=')[1]
+            /* 2.加载文章详细信息 */
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $.ajax({
                 url: 'http://localhost:8080/api/v1/index/article',
                 type: 'get',
                 dataType: 'json',
                 data: { id: id },
                 success: function (backData) {
+<<<<<<< HEAD
                     /// console.log(backData);
                     $('#info').html(template('info_list', backData))
                 }
             });
             /* 评论列表 */
+=======
+                    // console.log(backData);
+                    $('.info').html(template('info_list', backData))
+                }
+            });
+            /* 3.加载评论列表 */
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
             $.ajax({
                 url: 'http://localhost:8080/api/v1/index/get_comment',
                 type: 'get',
                 dataType: 'json',
                 data: { articleId: id },
                 success: function (backData) {
+<<<<<<< HEAD
                     console.log(backData);
                     $('.comment_list_con').html(template('get_comment', backData));
                 }
@@ -348,6 +401,10 @@
                 success: function (backData) {
                     // console.log(backData);
                     $('.guanzhu_list').html(template('attention', backData))
+=======
+                    $('.comment_list_con').html(template('get_comment', backData))
+                    $('.comment_count').text(backData.data.length + '条评论')
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
                 }
             });
             /* 发表评论 */
@@ -364,12 +421,20 @@
                     },
                     success: function (backData) {
                         alert(backData.msg)
+<<<<<<< HEAD
                         window.location.reload();
                     }
                 });
             })
 
         })
+=======
+                    }
+                });
+            })
+        })
+
+>>>>>>> cc1599e2e80e4eb2f94ad6141e97646bb1f044b4
     </script>
 </body>
 
