@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="./libs/jquery-1.12.4.min.js"></script>
+    <script src="./libs/http.js"></script>
 
 </head>
 
@@ -68,6 +69,56 @@
             </form>
         </div>
     </div>
+    <script>
+        $(function () {
+            //页面一加载发送AJAX请求用户详细信息渲染页面
+            $.ajax({
+                url: BigNew.user_detail,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    if (backData.code == 200) {
+                        $('#inputEmail1').val(backData.data.username);//用户邮箱
+                        $('#inputEmail2').val(backData.data.nickname)//用户昵称
+                        $('#inputEmail3').val(backData.data.email)//用户邮箱
+                        $('.user_pic').attr('src', backData.data.userPic)//用户头像
+                        $('#inputEmail4').val(backData.data.password)//用户密码
+                    }
+                }
+            });
+            //文件预览
+            //1.给file表单元素注册onchange事件
+            $('#exampleInputFile').change(function () {
+                //1.2 获取用户选择的图片
+                var file = this.files[0];
+                //1.3 将文件转为src路径
+                var url = URL.createObjectURL(file);
+                //1.4 将url路径赋值给img标签的src
+                $('.user_pic').attr('src', url);
+            });
+            //文件上传
+            $('.btn-edit').on('click', function (e) {
+                //禁用表单默认提交事件
+                e.preventDefault();
+                //创建FormData对象：参数是表单dom对象
+                var fd = new FormData($('form')[0])
+                $.ajax({
+                    url: BigNew.user_edit,
+                    type: 'post',
+                    dataType: 'json',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (backData) {
+                        if (backData.code == 200) {
+                            alert(backData.msg);
+                            window.parent.location.reload();
+                        }
+                    }
+                });
+            });
+        })
+    </script>
 </body>
 
 </html>

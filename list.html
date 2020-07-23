@@ -12,6 +12,15 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.pagination.min.js"></script>
+    <script src="./admin/libs/jquery.twbsPagination.js"></script>
+    <link rel="stylesheet" href="./admin/libs/bootstrap/css/bootstrap.min.css">
+    <script src="./admin/libs/bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+        .tac {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -211,6 +220,9 @@
             </div>
         </div>
     </div>
+    <div class="tac">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
 
     <div class="footer clearfix">
         <div class="foot_link">
@@ -227,6 +239,166 @@
     </div>
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
+    <!-- 热门排行 -->
+    <script id="rank" type="text/html">
+        {{each data v}}
+        <li>
+        {{if $index==0}}
+         <span class="first">
+        {{else if $index==1}}
+        <span class="second">
+        {{else if $index==2}}
+        <span class="third">
+        {{else}}
+        <span>
+        {{/if}}
+        {{$index+1}}</span>
+        <a href="./article.html?id={{ v.id }}">{{v.title}}</a></li>
+        {{/each}}
+    </script>
+    <!-- 最新评论 -->
+    <script id="comment_li" type="text/html">
+        {{each data v}}
+        <li>
+         <span>{{v.author[0]}}</span>
+         <b><em>{{v.author}}</em> {{v.date}} {{v.time}}说:</b>
+         <strong>{{v.intro}}</strong>
+        </li>
+        {{/each}}
+         </script>
+    <!-- 焦点关注 -->
+    <script id="attention" type="text/html">
+             {{each data v}}
+     <li><a href="./article.html?id={{ v.id }}">{{v.intro}}</a></li>
+     {{/each}}
+         </script>
+    <!-- 焦点关注 -->
+    <script id="attention" type="text/html">
+        {{each data v}}
+<li><a href="./article.html?id={{ v.id }}">{{v.intro}}</a></li>
+{{/each}}
+    </script>
+    <!-- 文章搜索 -->
+    <script id="search" type="text/html">
+        <div class="list_title">
+            <h3>科 技</h3>
+        </div>
+        {{each data.data v}}
+        <div class="common_news_list">
+            <a href="./article.html?id={{ v.id }}" class="list_pic"><img src="{{v.cover}}" alt=""></a>
+            <h4><a href="./article.html?id={{ v.id }}">{{v.title}}</a></h4>
+            <p>{{v.content}}</p>
+            <div class="new_info">
+                <span>标签：{{v.category}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{v.read}}
+                    )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( {{v.comments}}} )</span>
+                <b>发布于 {{v.date}}</b>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    <!-- 文章类型 -->
+    <script id="category" type="text/html">
+        <li class="up"></li>
+        {{each data v}}
+       <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+       {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            var id = window.location.href.split('=');
+            /* 热门排行 */
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/rank',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.content_list').html(template('rank', backData))
+                }
+            });
+            /* 最新评论 */
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/latest_comment',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.comment_list').html(template('comment_li', backData))
+                }
+            });
+            /* 焦点关注 */
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/attention',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    // console.log(backData);
+                    $('.guanzhu_list').html(template('attention', backData))
+                }
+            });
+            /* 文章搜索 */
+            $('.fa-search').click(function () {
+                $.ajax({
+                    url: 'http://localhost:8080/api/v1/index/search',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        key: $('.search_txt').val(),
+                        type: id,
+                        page: 1,
+                        perpage: 10
+                    },
+                    success: function (backData) {
+                        $('.left_con').html(template('search', backData));
+                        $('#pagination').twbsPagination('destroy');
+                        $('#pagination').twbsPagination({
+                            totalPages: 20,//总页数
+                            startPage: 1,//起始页
+                            visiblePages: 6,//可见页数
+                            first: '首页',
+                            prev: '上一页',
+                            next: '下一页',
+                            last: '尾页',
+                            onPageClick: function (event, page) {//页码点击事件
+                                $('#page-content').text('Page ' + page);
+                                console.log(page);//当前点击页 
+                                getLoadPage(page)
+                            }
+                        });
+                    }
+                });
+            })
+            $('.fa-search').click();
+            /* 文章类型 */
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/category',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.level_two').html(template('category', backData))
+                }
+            });
+
+            //封装分页插件页码点击事件
+            function getLoadPage(page) {
+                $.ajax({
+                    url: 'http://localhost:8080/api/v1/index/search',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        key: $('.search_txt').val(),
+                        type: id,
+                        page: page,
+                        perpage: 10
+                    },
+                    success: function (backData) {
+                        $('.left_con').html(template('search', backData));
+                    }
+                });
+            }
+
+
+        })
+    </script>
 </body>
 
 </html>
